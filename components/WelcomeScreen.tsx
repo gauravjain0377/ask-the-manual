@@ -5,10 +5,7 @@
 
 import React, { useState, useCallback } from 'react';
 import Spinner from './Spinner';
-import UploadCloudIcon from './icons/UploadCloudIcon';
-import CarIcon from './icons/CarIcon';
-import WashingMachineIcon from './icons/WashingMachineIcon';
-import TrashIcon from './icons/TrashIcon';
+import Icon from './Icon';
 
 interface WelcomeScreenProps {
     onUpload: () => Promise<void>;
@@ -19,19 +16,19 @@ interface WelcomeScreenProps {
     onSelectKey: () => Promise<void>;
 }
 
-const sampleDocuments = [
+    const sampleDocuments = [
     {
         name: 'Hyundai i10 Manual',
         details: '562 pages, PDF',
         url: 'https://www.hyundai.com/content/dam/hyundai/in/en/data/connect-to-service/owners-manual/2025/i20&i20nlineFromOct2023-Present.pdf',
-        icon: <CarIcon />,
+    icon: <Icon name="truck" size={28} className="text-gem-offwhite/90" />,
         fileName: 'hyundai-i10-manual.pdf'
     },
     {
         name: 'LG Washer Manual',
         details: '36 pages, PDF',
         url: 'https://www.lg.com/us/support/products/documents/WM2077CW.pdf',
-        icon: <WashingMachineIcon />,
+    icon: <Icon name="washing" size={28} className="text-gem-offwhite/90" />,
         fileName: 'lg-washer-manual.pdf'
     }
 ];
@@ -45,7 +42,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onUpload, apiKeyError, fi
             setFiles(prev => [...prev, ...Array.from(event.target.files!)]);
         }
     };
-    
+  
     const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -122,7 +119,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onUpload, apiKeyError, fi
                     onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
                 >
                     <div className="flex flex-col items-center justify-center">
-                        <UploadCloudIcon />
+                        <Icon name="upload" size={48} className="text-gem-blue/90" />
                         <p className="mt-4 text-lg text-gem-offwhite/80">Drag & drop your PDF, .txt, or .md file here.</p>
                         <input id="file-upload" type="file" multiple className="hidden" onChange={handleFileChange} accept=".pdf,.txt,.md"/>
                          <label 
@@ -157,7 +154,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onUpload, apiKeyError, fi
                                             aria-label={`Remove ${file.name}`}
                                             title="Remove this file"
                                         >
-                                            <TrashIcon />
+                                            <Icon name="trash" size={16} className="text-red-400" />
                                         </button>
                                     </div>
                                 </li>

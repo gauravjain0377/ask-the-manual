@@ -5,8 +5,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChatMessage } from '../types';
 import Spinner from './Spinner';
-import SendIcon from './icons/SendIcon';
-import RefreshIcon from './icons/RefreshIcon';
+import Icon from './Icon';
 
 interface ChatInterfaceProps {
     documentName: string;
@@ -133,7 +132,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ documentName, history, is
                         className="flex items-center px-4 py-2 bg-gem-blue hover:bg-blue-500 rounded-full text-white transition-colors flex-shrink-0"
                         title="End current chat and start a new one"
                     >
-                        <RefreshIcon />
+                        <Icon name="refresh" size={18} className="text-white" />
                         <span className="ml-2 hidden sm:inline">New Chat</span>
                     </button>
                 </div>
@@ -206,7 +205,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ documentName, history, is
                             disabled={isQueryLoading}
                         />
                         <button type="submit" disabled={isQueryLoading || !query.trim()} className="p-3 bg-gem-blue hover:bg-blue-500 rounded-full text-white disabled:bg-gem-mist transition-colors" title="Send message">
-                            <SendIcon />
+                            <Icon name="send" size={16} className="text-white" />
                         </button>
                     </form>
                 </div>
