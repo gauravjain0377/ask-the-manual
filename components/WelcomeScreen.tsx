@@ -4,6 +4,7 @@
 */
 
 import React, { useState, useCallback } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Spinner from './Spinner';
 import Icon from './Icon';
 
@@ -16,19 +17,19 @@ interface WelcomeScreenProps {
     onSelectKey: () => Promise<void>;
 }
 
-    const sampleDocuments = [
+const sampleDocuments = [
     {
         name: 'Hyundai i10 Manual',
-        details: '562 pages, PDF',
+        details: '562 pages · PDF',
         url: 'https://www.hyundai.com/content/dam/hyundai/in/en/data/connect-to-service/owners-manual/2025/i20&i20nlineFromOct2023-Present.pdf',
-    icon: <Icon name="truck" size={28} className="text-gem-offwhite/90" />,
+        icon: <Icon name="truck" size={30} className="text-accent" />,
         fileName: 'hyundai-i10-manual.pdf'
     },
     {
         name: 'LG Washer Manual',
-        details: '36 pages, PDF',
+        details: '36 pages · PDF',
         url: 'https://www.lg.com/us/support/products/documents/WM2077CW.pdf',
-    icon: <Icon name="washing" size={28} className="text-gem-offwhite/90" />,
+        icon: <Icon name="washing" size={30} className="text-accent" />,
         fileName: 'lg-washer-manual.pdf'
     }
 ];
@@ -105,104 +106,186 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onUpload, apiKeyError, fi
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-3xl text-center">
-                <h1 className="text-4xl sm:text-5xl font-bold mb-2">Chat With Your Document</h1>
-                <p className="text-gem-offwhite/70 mb-8">
-                    Powered by <strong className="font-semibold text-gem-offwhite">FileSearch</strong>. Upload a manual or select example to see RAG in action.
-                </p>
-
-               
-
-                <div 
-                    className={`relative border-2 border-dashed rounded-lg p-10 text-center transition-colors mb-6 ${isDragging ? 'border-gem-blue bg-gem-mist/10' : 'border-gem-mist/50'}`}
-                    onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
+        <div className="relative flex min-h-screen w-full items-center justify-center px-4 py-14 sm:px-6 lg:px-10">
+            <div className="absolute inset-0 -z-10">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.18),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(34,211,238,0.16),_transparent_50%)]" />
+            </div>
+            <div className="mx-auto w-full max-w-5xl">
+                <motion.div
+                    className="mb-10 flex flex-col items-center text-center"
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, ease: 'easeOut' }}
                 >
-                    <div className="flex flex-col items-center justify-center">
-                        <Icon name="upload" size={48} className="text-gem-blue/90" />
-                        <p className="mt-4 text-lg text-gem-offwhite/80">Drag & drop your PDF, .txt, or .md file here.</p>
-                        <input id="file-upload" type="file" multiple className="hidden" onChange={handleFileChange} accept=".pdf,.txt,.md"/>
-                         <label 
-                            htmlFor="file-upload" 
-                            className="mt-4 cursor-pointer px-6 py-2 bg-gem-blue text-white rounded-full font-semibold hover:bg-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gem-onyx focus:ring-gem-blue" 
-                            title="Select files from your device"
-                            tabIndex={0}
-                            onKeyDown={e => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    (document.getElementById('file-upload') as HTMLInputElement)?.click();
-                                }
-                            }}
-                         >
-                            Or Browse Files
-                        </label>
-                    </div>
-                </div>
+                    <span className="inline-flex items-center rounded-full bg-surface px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-ink-soft/60 shadow-subtle">
+                        Document Intelligence
+                    </span>
+                    <h1 className="mt-6 max-w-3xl font-display text-4xl leading-tight text-ink sm:text-5xl">
+                        Upload manuals, explore insights, and chat with clarity.
+                    </h1>
+                    <p className="mt-4 max-w-2xl text-lg text-ink-soft/80">
+                        AskTheManual turns dense handbooks into a conversational experience. Bring your own files or test a curated example to see retrieval-augmented generation in action.
+                    </p>
+                    <AnimatePresence>
+                        {apiKeyError && (
+                            <motion.div
+                                key="apikey-error"
+                                className="mt-6 w-full max-w-xl rounded-2xl border border-danger/30 bg-danger/5 px-5 py-3 text-sm text-danger"
+                                initial={{ opacity: 0, y: 6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -6 }}
+                            >
+                                {apiKeyError}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
 
-                {files.length > 0 && (
-                    <div className="w-full max-w-xl mx-auto mb-6 text-left">
-                        <h4 className="font-semibold mb-2">Selected Files ({files.length}):</h4>
-                        <ul className="max-h-36 overflow-y-auto space-y-1 pr-2">
-                            {files.map((file, index) => (
-                                <li key={`${file.name}-${index}`} className="text-sm bg-gem-mist/50 p-2 rounded-md flex justify-between items-center group">
-                                    <span className="truncate" title={file.name}>{file.name}</span>
-                                    <div className="flex items-center flex-shrink-0">
-                                        <span className="text-xs text-gem-offwhite/50 ml-2">{(file.size / 1024).toFixed(2)} KB</span>
-                                        <button 
-                                            onClick={() => handleRemoveFile(index)}
-                                            className="ml-2 p-1 text-red-400 hover:text-red-300 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                            aria-label={`Remove ${file.name}`}
-                                            title="Remove this file"
-                                        >
-                                            <Icon name="trash" size={16} className="text-red-400" />
-                                        </button>
+                <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
+                    <motion.div
+                        className="elevated-card lg:min-h-[480px]"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05, duration: 0.45, ease: 'easeOut' }}
+                    >
+                        <div className="flex flex-col gap-8 px-8 py-10">
+                            <div
+                                className={`group relative flex flex-col items-center justify-center rounded-3xl border border-dashed px-8 py-14 text-center transition ${
+                                    isDragging ? 'border-accent bg-accent/5 shadow-brand' : 'border-outline/80 bg-surface-soft'
+                                }`}
+                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}
+                                onDragLeave={handleDragLeave}
+                            >
+                                <div className="flex flex-col items-center gap-6">
+                                    <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 text-accent">
+                                        <Icon name="upload" size={36} />
+                                    </span>
+                                    <div className="space-y-3">
+                                        <p className="text-xl font-semibold text-ink">Drop your manuals here</p>
+                                        <p className="max-w-sm text-sm text-ink-soft/70">
+                                            Supports PDF, TXT, and Markdown files. We process them securely and spin up a temporary knowledge store for your session.
+                                        </p>
                                     </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-                
-                <div className="w-full max-w-xl mx-auto">
-                    {files.length > 0 && (
-                        <button 
-                            onClick={handleConfirmUpload}
-                            disabled={!isApiKeySelected}
-                            className="w-full px-6 py-3 rounded-md bg-gem-blue hover:bg-blue-500 text-white font-bold transition-colors disabled:bg-gem-mist/50 disabled:cursor-not-allowed"
-                            title={!isApiKeySelected ? "Please select an API key first" : "Start chat session with the selected files"}
-                        >
-                            Upload and Chat
-                        </button>
-                    )}
-                </div>
-                
-                <div className="flex items-center my-8">
-                    <div className="flex-grow border-t border-gem-mist"></div>
-                    <span className="flex-shrink mx-4 text-gem-offwhite/60">OR</span>
-                    <div className="flex-grow border-t border-gem-mist"></div>
-                </div>
+                                    <input id="file-upload" type="file" multiple className="hidden" onChange={handleFileChange} accept=".pdf,.txt,.md" />
+                                    <motion.label
+                                        htmlFor="file-upload"
+                                        className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-ink text-surface px-6 py-3 text-sm font-semibold tracking-wide transition hover:bg-ink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
+                                        tabIndex={0}
+                                        onKeyDown={e => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                (document.getElementById('file-upload') as HTMLInputElement)?.click();
+                                            }
+                                        }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <Icon name="upload" size={18} className="text-surface" />
+                                        Browse from device
+                                    </motion.label>
+                                </div>
+                            </div>
 
-                <div className="text-left mb-4">
-                    <p className="text-gem-offwhite/80">Try an example:</p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-                    {sampleDocuments.map(doc => (
-                        <button
-                            key={doc.name}
-                            onClick={() => handleSelectSample(doc.name, doc.url, doc.fileName)}
-                            disabled={!!loadingSample}
-                            className="bg-gem-slate p-4 rounded-lg border border-gem-mist/30 hover:border-gem-blue/50 hover:bg-gem-mist/10 transition-all text-left flex items-center space-x-4 disabled:opacity-50 disabled:cursor-wait"
-                            title={`Chat with the ${doc.name}`}
-                        >
-                            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0 bg-gem-mist/20 rounded-lg">
-                                {loadingSample === doc.name ? <Spinner /> : doc.icon}
+                            {files.length > 0 && (
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-ink-soft/70">Queue</h4>
+                                        <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">{files.length} file{files.length > 1 ? 's' : ''}</span>
+                                    </div>
+                                    <ul className="subtle-scrollbar max-h-44 space-y-2 overflow-y-auto pr-1 text-sm">
+                                        {files.map((file, index) => (
+                                            <li
+                                                key={`${file.name}-${index}`}
+                                                className="flex items-center justify-between rounded-2xl border border-outline/70 bg-surface px-4 py-3"
+                                            >
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="truncate text-sm font-medium text-ink" title={file.name}>{file.name}</p>
+                                                    <span className="text-xs text-ink-soft/70">{(file.size / 1024).toFixed(1)} KB</span>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleRemoveFile(index)}
+                                                    className="ml-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-surface-soft text-ink-soft/70 transition hover:text-danger"
+                                                    aria-label={`Remove ${file.name}`}
+                                                    title="Remove this file"
+                                                >
+                                                    <Icon name="trash" size={18} />
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                              
+
+                                {files.length > 0 && (
+                                    <motion.button
+                                        onClick={handleConfirmUpload}
+                                        disabled={!isApiKeySelected}
+                                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-accent via-accent-soft to-accent-emerald px-6 py-3 text-sm font-semibold text-white shadow-brand transition disabled:cursor-not-allowed disabled:opacity-60"
+                                        title={!isApiKeySelected ? 'Please select an API key first' : 'Start chat session with the selected files'}
+                                        whileTap={{ scale: 0.97 }}
+                                        aria-disabled={!isApiKeySelected}
+                                    >
+                                        <Icon name="send" size={18} className="text-white" />
+                                        Upload & Start chatting
+                                    </motion.button>
+                                )}
                             </div>
-                            <div>
-                                <p className="font-semibold text-gem-offwhite">{doc.name}</p>
-                                <p className="text-sm text-gem-offwhite/60">{doc.details}</p>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="flex flex-col gap-6"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1, duration: 0.45, ease: 'easeOut' }}
+                    >
+                        <div className="rounded-3xl border border-outline/80 bg-surface px-7 py-8 shadow-subtle">
+                            <h3 className="font-display text-xl text-ink">Choose an example</h3>
+                            <p className="mt-2 text-sm text-ink-soft/75">Dive in instantly with preloaded manuals curated to highlight question-driven exploration.</p>
+                            <div className="mt-6 grid gap-3">
+                                {sampleDocuments.map(doc => (
+                                    <motion.button
+                                        key={doc.name}
+                                        onClick={() => handleSelectSample(doc.name, doc.url, doc.fileName)}
+                                        className="flex items-center gap-4 rounded-2xl border border-outline/70 bg-surface-soft px-4 py-4 text-left transition hover:-translate-y-1 hover:border-accent/50 hover:bg-surface"
+                                        disabled={!!loadingSample}
+                                        title={`Chat with the ${doc.name}`}
+                                        whileTap={{ scale: 0.99 }}
+                                    >
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
+                                            {loadingSample === doc.name ? <Spinner /> : doc.icon}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-sm font-semibold text-ink">{doc.name}</p>
+                                            <p className="text-xs text-ink-soft/70">{doc.details}</p>
+                                        </div>
+                                        <span className="text-xs font-medium uppercase tracking-[0.2em] text-ink-soft/50">Preview</span>
+                                    </motion.button>
+                                ))}
                             </div>
-                        </button>
-                    ))}
+                        </div>
+
+                        <div className="rounded-3xl border border-outline/40 bg-surface/80 px-7 py-6 backdrop-blur">
+                            <h4 className="text-sm font-semibold text-ink">How it works</h4>
+                            <ul className="mt-4 space-y-3 text-sm text-ink-soft/75">
+                                <li className="flex items-start gap-3">
+                                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-xs font-semibold text-accent">01</span>
+                                    Upload documents securely and define a private session.
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-xs font-semibold text-accent">02</span>
+                                    We generate embeddings, build a contextual index, and suggest starter prompts.
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-xs font-semibold text-accent">03</span>
+                                    Chat naturally. Each answer references the most relevant passages for transparency.
+                                </li>
+                            </ul>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </div>

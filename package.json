@@ -12,6 +12,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "@google/genai": "^1.29.0",
+    "framer-motion": "^11.11.17",
     "react-icons": "^4.10.1"
   },
   "devDependencies": {

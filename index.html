@@ -10,22 +10,42 @@
         theme: {
           extend: {
             colors: {
-              'gem-onyx': '#f8fafc',
-              'gem-slate': '#ffffff',
-              'gem-mist': '#e2e8f0',
-              'gem-offwhite': '#1e293b',
-              'gem-teal': '#0d9488',
-              'gem-blue': '#2563eb',
+              canvas: '#f5f7fb',
+              surface: '#ffffff',
+              'surface-soft': '#f1f5f9',
+              outline: '#e0e7ef',
+              ink: '#0f172a',
+              'ink-soft': '#475569',
+              accent: '#6366f1',
+              'accent-soft': '#a855f7',
+              'accent-muted': '#7c3aed',
+              'accent-emerald': '#22d3ee',
+              success: '#16a34a',
+              danger: '#ef4444'
+            },
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+              display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif']
+            },
+            boxShadow: {
+              brand: '0 24px 60px rgba(79, 70, 229, 0.16)',
+              subtle: '0 12px 30px rgba(15, 23, 42, 0.08)'
+            },
+            backgroundImage: {
+              'canvas-gradient': 'radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.16), transparent 45%), radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.18), transparent 55%), linear-gradient(180deg, #f9fbff 0%, #edf2fb 100%)'
             },
             keyframes: {
               'progress-stripes': {
-                'from': { backgroundPosition: '1rem 0' },
-                'to': { backgroundPosition: '0 0' },
-              },
+                from: { backgroundPosition: '1rem 0' },
+                to: { backgroundPosition: '0 0' }
+              }
             },
             animation: {
-              'progress-stripes': 'progress-stripes 1s linear infinite',
+              'progress-stripes': 'progress-stripes 1s linear infinite'
             },
+            transitionTimingFunction: {
+              'soft-spring': 'cubic-bezier(0.4, 0, 0.2, 1)'
+            }
           }
         }
       }
@@ -33,7 +53,7 @@
   
   <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-gem-onyx">
+  <body class="min-h-screen bg-canvas bg-canvas-gradient">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

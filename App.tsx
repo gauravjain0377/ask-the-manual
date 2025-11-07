@@ -10,6 +10,7 @@ import Spinner from './components/Spinner';
 import WelcomeScreen from './components/WelcomeScreen';
 import ProgressBar from './components/ProgressBar';
 import ChatInterface from './components/ChatInterface';
+import { LuLayers, LuMessagesSquare, LuPartyPopper, LuSparkles, LuUploadCloud } from 'react-icons/lu';
 
 // DO: Define the AIStudio interface to resolve a type conflict where `window.aistudio` was being redeclared with an anonymous type.
 // FIX: Moved the AIStudio interface definition inside the `declare global` block to resolve a TypeScript type conflict.
@@ -250,60 +251,95 @@ const App: React.FC = () => {
     };
     
     const renderContent = () => {
-        switch(status) {
+        switch (status) {
             case AppStatus.Initializing:
                 return (
-                    <div className="flex items-center justify-center h-screen">
-                        <Spinner /> <span className="ml-4 text-xl">Initializing...</span>
+                    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-canvas">
+                        <Spinner />
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-ink-soft/70">Initializing workspace…</p>
                     </div>
                 );
             case AppStatus.Welcome:
-                 return <WelcomeScreen onUpload={handleUploadAndStartChat} apiKeyError={apiKeyError} files={files} setFiles={setFiles} isApiKeySelected={isApiKeySelected} onSelectKey={handleSelectKey} />;
-            case AppStatus.Uploading:
-                let icon = null;
-                if (uploadProgress?.message === "Creating document index...") {
-                    icon = <img src="https://services.google.com/fh/files/misc/applet-upload.png" alt="Uploading files icon" className="h-80 w-80 rounded-lg object-cover" />;
-                } else if (uploadProgress?.message === "Generating embeddings...") {
-                    icon = <img src="https://services.google.com/fh/files/misc/applet-creating-embeddings_2.png" alt="Creating embeddings icon" className="h-240 w-240 rounded-lg object-cover" />;
-                } else if (uploadProgress?.message === "Generating suggestions...") {
-                    icon = <img src="https://services.google.com/fh/files/misc/applet-suggestions_2.png" alt="Generating suggestions icon" className="h-240 w-240 rounded-lg object-cover" />;
-                } else if (uploadProgress?.message === "All set!") {
-                    icon = <img src="https://services.google.com/fh/files/misc/applet-completion_2.png" alt="Completion icon" className="h-240 w-240 rounded-lg object-cover" />;
-                }
+                return (
+                    <WelcomeScreen
+                        onUpload={handleUploadAndStartChat}
+                        apiKeyError={apiKeyError}
+                        files={files}
+                        setFiles={setFiles}
+                        isApiKeySelected={isApiKeySelected}
+                        onSelectKey={handleSelectKey}
+                    />
+                );
+            case AppStatus.Uploading: {
+                const iconMap: Record<string, React.ReactNode> = {
+                    "Creating document index...": <LuUploadCloud size={28} />,
+                    "Generating embeddings...": <LuLayers size={28} />,
+                    "Generating suggestions...": <LuSparkles size={28} />,
+                    "All set!": <LuPartyPopper size={28} />
+                };
 
-                return <ProgressBar 
-                    progress={uploadProgress?.current || 0} 
-                    total={uploadProgress?.total || 1} 
-                    message={uploadProgress?.message || "Preparing your chat..."} 
-                    fileName={uploadProgress?.fileName}
-                    icon={icon}
-                />;
+                const icon = uploadProgress?.message ? iconMap[uploadProgress.message] ?? <LuMessagesSquare size={28} /> : <LuMessagesSquare size={28} />;
+
+                return (
+                    <div className="min-h-screen bg-canvas">
+                        <ProgressBar
+                            progress={uploadProgress?.current || 0}
+                            total={uploadProgress?.total || 1}
+                            message={uploadProgress?.message || 'Preparing your chat...'}
+                            fileName={uploadProgress?.fileName}
+                            icon={icon}
+                        />
+                    </div>
+                );
+            }
             case AppStatus.Chatting:
-                return <ChatInterface 
-                    documentName={documentName}
-                    history={chatHistory}
-                    isQueryLoading={isQueryLoading}
-                    onSendMessage={handleSendMessage}
-                    onNewChat={handleEndChat}
-                    exampleQuestions={exampleQuestions}
-                />;
+                return (
+                    <ChatInterface
+                        documentName={documentName}
+                        history={chatHistory}
+                        isQueryLoading={isQueryLoading}
+                        onSendMessage={handleSendMessage}
+                        onNewChat={handleEndChat}
+                        exampleQuestions={exampleQuestions}
+                    />
+                );
             case AppStatus.Error:
-                 return (
-                    <div className="flex flex-col items-center justify-center h-screen bg-red-900/20 text-red-300">
-                        <h1 className="text-3xl font-bold mb-4">Application Error</h1>
-                        <p className="max-w-md text-center mb-4">{error}</p>
-                        <button onClick={clearError} className="px-4 py-2 rounded-md bg-gem-mist hover:bg-gem-mist/70 transition-colors" title="Return to the welcome screen">
-                           Try Again
-                        </button>
+                return (
+                    <div className="flex min-h-screen items-center justify-center bg-canvas px-6">
+                        <div className="elevated-card w-full max-w-lg space-y-6 px-8 py-10 text-center">
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-danger/10 text-danger">
+                                <LuSparkles size={28} />
+                            </div>
+                            <div className="space-y-2">
+                                <h1 className="font-display text-2xl text-ink">Something went wrong</h1>
+                                <p className="text-sm text-ink-soft/80">{error}</p>
+                            </div>
+                            <button
+                                onClick={clearError}
+                                className="inline-flex items-center justify-center rounded-full border border-outline/70 bg-surface-soft px-5 py-2 text-sm font-semibold text-ink-soft transition hover:border-accent/50 hover:text-accent"
+                                title="Return to the welcome screen"
+                            >
+                                Try again
+                            </button>
+                        </div>
                     </div>
                 );
             default:
-                 return <WelcomeScreen onUpload={handleUploadAndStartChat} apiKeyError={apiKeyError} files={files} setFiles={setFiles} isApiKeySelected={isApiKeySelected} onSelectKey={handleSelectKey} />;
+                return (
+                    <WelcomeScreen
+                        onUpload={handleUploadAndStartChat}
+                        apiKeyError={apiKeyError}
+                        files={files}
+                        setFiles={setFiles}
+                        isApiKeySelected={isApiKeySelected}
+                        onSelectKey={handleSelectKey}
+                    />
+                );
         }
-    }
+    };
 
     return (
-        <main className="h-screen bg-gem-onyx text-gem-offwhite">
+        <main className="min-h-screen bg-canvas-gradient text-ink">
             {renderContent()}
         </main>
     );
