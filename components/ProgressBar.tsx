@@ -24,14 +24,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress, total, message, fil
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
         >
-          {icon && <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 text-accent">{icon}</div>}
+          {icon && <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-surface-soft text-ink-soft">{icon}</div>}
           <div className="space-y-3">
             <h2 className="font-display text-2xl font-semibold text-ink">{message}</h2>
             <p className="text-sm text-ink-soft/80" title={fileName}>{fileName || ''}</p>
           </div>
           <div className="relative h-3 w-full overflow-hidden rounded-full bg-surface-soft">
             <motion.div
-              className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-accent via-accent-soft to-accent-emerald"
+              className="absolute inset-y-0 left-0 rounded-full bg-ink"
               style={{ width: `${percentage}%` }}
               initial={{ width: 0 }}
               animate={{ width: `${percentage}%` }}

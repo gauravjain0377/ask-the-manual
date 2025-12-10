@@ -234,7 +234,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ documentName, history, is
                         <motion.button
                             type="submit"
                             disabled={isQueryLoading || !query.trim()}
-                            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-accent via-accent-soft to-accent-emerald px-5 py-3 text-sm font-semibold text-white shadow-brand transition disabled:cursor-not-allowed disabled:opacity-60"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-white shadow-subtle transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-60"
                             title="Send message"
                             whileTap={{ scale: isQueryLoading || !query.trim() ? 1 : 0.97 }}
                         >

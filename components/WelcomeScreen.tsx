@@ -19,18 +19,18 @@ interface WelcomeScreenProps {
 
 const sampleDocuments = [
     {
-        name: 'Hyundai i10 Manual',
-        details: '562 pages · PDF',
-        url: 'https://www.hyundai.com/content/dam/hyundai/in/en/data/connect-to-service/owners-manual/2025/i20&i20nlineFromOct2023-Present.pdf',
-        icon: <Icon name="truck" size={30} className="text-accent" />,
-        fileName: 'hyundai-i10-manual.pdf'
+        name: 'Iphone 17 Pro Max Manual',
+        details: '8 pages · PDF',
+        url: 'https://cdsassets.apple.com/live/6GJYWVAV/information/locale/en-gb/iphone-17-pro-max-info.pdf',
+        icon: <Icon name="washing" size={30} className="text-accent" />,
+        fileName: 'apple-mobile-manual.pdf'
     },
     {
-        name: 'LG Washer Manual',
-        details: '36 pages · PDF',
-        url: 'https://www.lg.com/us/support/products/documents/WM2077CW.pdf',
-        icon: <Icon name="washing" size={30} className="text-accent" />,
-        fileName: 'lg-washer-manual.pdf'
+        name: 'Tesla Model S Owner Manual',
+        details: '176 pages · PDF',
+        url: 'https://staff.uq.edu.au/files/6658/tesla-owner-manual.pdf',
+        icon: <Icon name="truck" size={30} className="text-accent" />,
+        fileName: 'tesla-owner-manual.pdf'
     }
 ];
 
@@ -223,7 +223,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onUpload, apiKeyError, fi
                                     <motion.button
                                         onClick={handleConfirmUpload}
                                         disabled={!isApiKeySelected}
-                                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-accent via-accent-soft to-accent-emerald px-6 py-3 text-sm font-semibold text-white shadow-brand transition disabled:cursor-not-allowed disabled:opacity-60"
+                                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-ink px-6 py-3 text-sm font-semibold text-white shadow-subtle transition hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-60"
                                         title={!isApiKeySelected ? 'Please select an API key first' : 'Start chat session with the selected files'}
                                         whileTap={{ scale: 0.97 }}
                                         aria-disabled={!isApiKeySelected}
