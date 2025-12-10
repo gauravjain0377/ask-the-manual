@@ -26,11 +26,11 @@ const sampleDocuments = [
         fileName: 'apple-mobile-manual.pdf'
     },
     {
-        name: 'Tesla Model S Owner Manual',
-        details: '176 pages · PDF',
-        url: 'https://staff.uq.edu.au/files/6658/tesla-owner-manual.pdf',
+        name: 'LG Washer Manual',
+        details: '36 pages · PDF',
+        url: 'https://www.lg.com/us/support/products/documents/WM2077CW.pdf',
         icon: <Icon name="truck" size={30} className="text-accent" />,
-        fileName: 'tesla-owner-manual.pdf'
+        fileName: 'lg-washer-manual.pdf'
     }
 ];
 
