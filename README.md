@@ -1,5 +1,5 @@
 
-KnowMate is an intelligent and interactive platform designed to simplify how users access, understand, and interact with technical or product-related information. The platform acts as a smart assistant that allows users to query any manual, guide, or documentation and instantly receive clear, contextual, and easy-to-understand responses.
+Ask the Manual is an intelligent and interactive platform designed to simplify how users access, understand, and interact with technical or product-related information. The platform acts as a smart assistant that allows users to query any manual, guide, or documentation and instantly receive clear, contextual, and easy-to-understand responses.
 
 Instead of scrolling through lengthy manuals or complex PDFs, users can simply “ask” their question in natural language — and the system retrieves the relevant section, summarizes it, and delivers a precise answer.
 
